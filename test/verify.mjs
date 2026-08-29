@@ -121,6 +121,15 @@ async function inspect(html, width) {
   return r;
 }
 
+/* The site is public and has no access control, so the pages must stay out of
+   search results -- personal.html carries a name, a job title and a work
+   address. On a GitHub project page the noindex meta is the whole mechanism:
+   a crawler reads robots.txt only at the domain root, which this is not. */
+for (const f of ['index.html', 'personal.html', 'branch.html']) {
+  const page = readFileSync(join(DIST, f), 'utf8');
+  ok(`${f} is noindex`, /<meta name="robots" content="noindex, nofollow">/.test(page));
+}
+
 for (const mode of ['person', 'org']) {
   console.log(`\n${mode === 'person' ? 'PERSONAL' : 'BRANCH'} signature`);
   const { html, errs } = await signatureFor(mode);

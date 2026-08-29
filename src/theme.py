@@ -285,6 +285,16 @@ def head(title, description, icon, extra_css=''):
     """Everything between <head> and </head>, shared by all three pages."""
     return ('<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+            # The site is public -- GitHub Pages has no access control on a free
+            # plan -- but it is for staff, and personal.html carries a name, a job
+            # title and a work address. Keep it out of search results.
+            #
+            # This meta is what does the work. robots.txt sits at the archive root
+            # for a deploy that owns its domain, but a crawler only reads
+            # robots.txt at the domain root, and this is a project page under
+            # sadikcinar1.github.io/<repo>/ -- so on Pages the file is ignored and
+            # the meta is the whole mechanism.
+            '<meta name="robots" content="noindex, nofollow">\n'
             '<title>' + title + '</title>\n'
             '<meta name="description" content="' + description + '">\n'
             '<meta name="theme-color" content="#008AC4">\n'

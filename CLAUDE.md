@@ -5,7 +5,7 @@ plus two finished signature pages. No backend, no database, no framework.
 
 ```
 python3 build.py          # rebuild into dist/ and docs/
-node test/verify.mjs      # 50 invariant checks against a real browser
+node test/verify.mjs      # 53 invariant checks against a real browser
 ```
 
 Published from `docs/` by GitHub Pages, and deployable anywhere else by
@@ -180,10 +180,25 @@ while you type it. `.sticky{order:-1}` under 800px is what fixes that.
 edge is the only cue that it does. It is painted with
 `background-attachment:local` so it travels with the content.
 
+## The site is public, and stays out of search
+
+GitHub Pages has no access control on a free plan: the repo is public, the site
+answers an unauthenticated request, and making the repo private would switch
+Pages off rather than lock it. So the pages are reachable by anyone with the
+URL, by design — but `personal.html` carries a name, a job title and a work
+address, and none of that needs to be in a search index.
+
+`theme.head()` puts `<meta name="robots" content="noindex, nofollow">` on every
+page, and that is the entire mechanism. `robots.txt` is written to the archive
+root for a deploy that owns its domain, but a crawler reads robots.txt only at
+the domain root — on a project page that is `sadikcinar1.github.io/robots.txt`,
+which belongs to a different repo. The file is ignored here. Don't delete the
+meta on the strength of the file being there.
+
 ## Shipping a change
 
 1. Edit, then `python3 build.py`.
-2. `node test/verify.mjs` — all 50 must pass.
+2. `node test/verify.mjs` — all 53 must pass.
 3. **Bump `VERSION` in `build.py`.** It shows in the page footer and the zip
    filename.
 4. Commit `docs/` along with the source. Pages serves that folder.

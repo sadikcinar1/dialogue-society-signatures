@@ -1,6 +1,6 @@
 DIALOGUE SOCIETY - STAFF EMAIL SIGNATURE APP
 =============================================
-Version v9
+Version v10
 
 Three pages -- the signature maker plus a finished personal and branch
 signature -- with no backend, no database and no build step. They run on any
@@ -16,14 +16,14 @@ They link to each other by relative name, so keep them in the same folder.
 
 CHECKING WHICH VERSION IS LIVE  -  READ THIS FIRST
 --------------------------------------------------
-The bottom of the page shows a version, e.g. "Signature app v9".
+The bottom of the page shows a version, e.g. "Signature app v10".
 
-After deploying, open your address and look at it. If it does not say v9,
+After deploying, open your address and look at it. If it does not say v10,
 then either an older file was uploaded or your browser is showing a cached
 copy. Reload with Cmd+Shift+R (Ctrl+Shift+R on Windows).
 
 Quick way to tell by eye:
-   v9 - the logo sits to the LEFT of the text.   <- correct
+   v10 - the logo sits to the LEFT of the text.   <- correct
    v5   - the logo sits ABOVE the text.            <- wrong file deployed
 
 Downloaded zips all used to share one filename, so it was easy to upload an

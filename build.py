@@ -26,7 +26,7 @@ import pages as ready_made                          # noqa: E402
 
 # Bump this whenever you ship. It appears in the page footer and the zip name,
 # so you can always tell which build is actually deployed.
-VERSION = 'v9'
+VERSION = 'v10'
 LAYOUT  = 'logo left'
 VLABEL  = '%s · %s' % (VERSION, LAYOUT)
 
@@ -99,6 +99,10 @@ def main():
     # ---- everything else the site needs --------------------------------
     shutil.copy(os.path.join(ASSETS, 'ds-mark.png'), os.path.join(SITE, 'ds-mark.png'))
     write('README.txt', app_page.readme(VERSION))
+    # Only effective where the site owns its domain root. On a GitHub project
+    # page the crawler reads sadikcinar1.github.io/robots.txt, not this one, so
+    # the noindex meta in theme.head is what keeps the pages out of search.
+    write('robots.txt', 'User-agent: *\nDisallow: /\n')
     # GitHub Pages runs Jekyll over the folder otherwise, which is harmless here
     # but only by luck -- one leading underscore in a filename and it disappears.
     write('.nojekyll', '')
