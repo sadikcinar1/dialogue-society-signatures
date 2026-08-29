@@ -26,7 +26,7 @@ import pages as ready_made                          # noqa: E402
 
 # Bump this whenever you ship. It appears in the page footer and the zip name,
 # so you can always tell which build is actually deployed.
-VERSION = 'v8'
+VERSION = 'v9'
 LAYOUT  = 'logo left'
 VLABEL  = '%s · %s' % (VERSION, LAYOUT)
 

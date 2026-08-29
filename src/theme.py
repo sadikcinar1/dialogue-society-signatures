@@ -180,21 +180,50 @@ function mkFlash(el){
     clearTimeout(el._t); el._t=setTimeout(function(){el.className='flash';},4600);
   };
 }
+/* Hand the clipboard a complete HTML document, not a selection fragment.
+
+   Apple Mail turns the data-URI logo into a cid: attachment as it pastes, and
+   an attachment cannot sit inside a table cell -- so Mail cuts the markup at
+   the image and re-opens the document from there. Against a fragment that seam
+   lands mid-table: the logo cell is emptied to <tr></td></tr>, the image is
+   hoisted out above everything else, and the table is re-emitted carrying only
+   the text cell. That is the logo-above-the-text bug, and it is nothing to do
+   with the narrow-pane reflow below -- it happens at any pane width.
+
+   document.execCommand('copy') is what produces that fragment, and Safari
+   prefixes it with a stray <head><meta charset>. A <head> is invalid inside a
+   fragment, and it is exactly where Mail re-opened the document. A well-formed
+   <head></head><body> document gives it no such seam and the <img> stays in its
+   cell -- which is why the same signature pasted correctly before and split
+   afterwards. Writing the document ourselves also keeps the page's computed
+   styles -- IBM Plex Sans, caret-color, box-sizing on every node -- from being
+   baked into the signature, which is what selection copying does.
+
+   execCommand stays as the fallback for browsers with no ClipboardItem.        */
+function sigDocument(html){
+  return '<!DOCTYPE html><html><head><meta charset="utf-8"></head>' +
+         '<body dir="auto">' + html + '</body></html>';
+}
 function copyNode(node,flash){
-  var sel=window.getSelection(), r=document.createRange(), ok=false;
-  sel.removeAllRanges(); r.selectNodeContents(node); sel.addRange(r);
-  try{ ok=document.execCommand('copy'); }catch(e){ ok=false; }
-  sel.removeAllRanges();
-  if(ok){ flash('Copied. Now paste it into your mail client.'); return; }
-  if(navigator.clipboard && window.ClipboardItem){
-    navigator.clipboard.write([new ClipboardItem({
-      'text/html': new Blob([node.innerHTML],{type:'text/html'}),
-      'text/plain': new Blob([node.innerText],{type:'text/plain'})
-    })]).then(function(){ flash('Copied. Now paste it into your mail client.'); },
-              function(){ flash('Select the signature above and press \u2318C.',1); });
-    return;
+  function done(){ flash('Copied. Now paste it into your mail client.'); }
+  function manual(){ flash('Select the signature above and press \u2318C.',1); }
+  function legacy(){
+    var sel=window.getSelection(), r=document.createRange(), ok=false;
+    sel.removeAllRanges(); r.selectNodeContents(node); sel.addRange(r);
+    try{ ok=document.execCommand('copy'); }catch(e){ ok=false; }
+    sel.removeAllRanges();
+    ok?done():manual();
   }
-  flash('Select the signature above and press \u2318C.',1);
+  if(navigator.clipboard && window.ClipboardItem){
+    try{
+      navigator.clipboard.write([new ClipboardItem({
+        'text/html': new Blob([sigDocument(node.innerHTML)],{type:'text/html'}),
+        'text/plain': new Blob([node.innerText],{type:'text/plain'})
+      })]).then(done, legacy);
+      return;
+    }catch(e){}
+  }
+  legacy();
 }
 function copyText(t,flash){
   function ok(){ flash('HTML source copied.'); }
@@ -230,9 +259,13 @@ APPLE = [
     'Untick <strong>Always match my default message font</strong>. Skip this and Mail '
     'strips the styling out.',
     'Drag the Settings window wider if it is narrow &mdash; the signature pane grows '
-    'with it, and a pane narrower than the signature is what pushes the logo onto '
-    'its own line.',
+    'with it, and a pane narrower than the signature squeezes the text column until '
+    'the social row wraps.',
     'Click into the right-hand pane and paste with <strong>&#8984;V</strong>.',
+    'If the logo lands above the text instead of beside it, undo with '
+    '<strong>&#8984;Z</strong>, click into the pane again and paste once more. Mail '
+    'occasionally converts the logo to an attachment as it pastes, and an attachment '
+    'cannot stay inside the layout.',
     'Set <strong>Choose Signature</strong> to it so it is added automatically.',
 ]
 def lockup(light, dark):

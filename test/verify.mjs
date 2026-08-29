@@ -128,6 +128,21 @@ for (const mode of ['person', 'org']) {
   ok('page raises no JS errors', errs.length === 0, errs[0]);
   ok('clipboard carries a table', /<table/i.test(html));
 
+  /* The clipboard payload has to be a well-formed document, not a selection
+     fragment. Apple Mail promotes the data-URI logo to a cid: attachment as it
+     pastes and re-opens the document at that point; against a fragment carrying
+     a stray <head> the seam landed mid-table, the logo cell was emptied to
+     <tr></td></tr> and the image was hoisted out above the text. See COPY_JS in
+     src/theme.py. */
+  /* A <head> is only legal inside a document. Selection copying emitted one
+     into a bare fragment, and that is where Mail re-opened the markup. */
+  ok('no <head> outside a document',
+     !/<head[\s>]/i.test(html) || /<html[\s>]/i.test(html), html.slice(0, 70));
+  ok('logo <img> sits inside a <td>',
+     /<td[^>]*>(?:(?!<\/td>)[\s\S])*?<img/i.test(html));
+  ok('page chrome does not leak into the signature',
+     !/IBM Plex Sans|caret-color|box-sizing/i.test(html));
+
   /* colour discipline */
   ok('uses brand blue #008AC4', /#008AC4|rgb\(0, 138, 196\)/i.test(html));
   ok('uses text blue #007AAD', /#007AAD|rgb\(0, 122, 173\)/i.test(html));

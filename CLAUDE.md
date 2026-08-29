@@ -5,7 +5,7 @@ plus two finished signature pages. No backend, no database, no framework.
 
 ```
 python3 build.py          # rebuild into dist/ and docs/
-node test/verify.mjs      # 44 invariant checks against a real browser
+node test/verify.mjs      # 50 invariant checks against a real browser
 ```
 
 Published from `docs/` by GitHub Pages, and deployable anywhere else by
@@ -30,9 +30,10 @@ machine, over several rounds:
 | Strips `width` / `height` attributes **and** the matching CSS | An image falls back to its file's natural size |
 | Strips `font-size` / `line-height` | Anything relying on a 1px font to stay thin inflates |
 | Leaves **borders** completely alone | Borders are the only reliable way to draw a line |
-| Reflows the table if its pane is narrower than the signature | Cells get pushed onto their own line |
+| Reflows the table if its pane is narrower than the signature | Cells get squeezed; the social row wraps |
+| Promotes a data-URI image to a `cid:` attachment as it pastes | An attachment cannot live in a table cell, so the image is hoisted out of the layout |
 
-Three rules follow, and the test suite enforces all three.
+Four rules follow, and the test suite enforces all four.
 
 **1. The logo file's natural size must equal its display size.**
 `assets/ds-mark.png` is exactly 70×75 and is displayed at 70×75. It was once a
@@ -50,9 +51,43 @@ blue rule was likewise a 4px cell that got squeezed to **zero width**; it is now
 
 **3. Fewer cells in the row is better.**
 The layout is two cells — logo, then text-with-left-border — not three. Three
-cells gave the narrow-pane reflow more to push around. If a pane is still
-narrower than the signature the logo can wrap above the text; the mitigation is
-in the Apple Mail instructions (widen the Settings window), not more markup.
+cells gave the narrow-pane reflow more to push around. A narrow pane squeezes
+the text column until the social row wraps; the mitigation is in the Apple Mail
+instructions (widen the Settings window), not more markup.
+
+**The logo landing above the text is a different bug, and not a reflow at all.**
+It was once recorded here as narrow-pane wrapping. It is not: table cells cannot
+wrap onto separate lines, and the Cocoa text engine keeps them side by side down
+to a 74px pane. What actually happens is in rule 4.
+
+**4. What reaches the clipboard must be a document, not a selection fragment.**
+Mail converts the data-URI logo into a `cid:` attachment as it pastes, and an
+attachment cannot stay inside a table cell — so Mail cuts the markup at the
+image and re-opens the document there. Read out of Mail's own
+`~/Library/Mobile Documents/com~apple~mail/Data/V4/Signatures/*.mailsignature`,
+a broken paste looks like this:
+
+```html
+<table width="378"><tbody><tr></td></tr></tbody></table>   <!-- logo cell, emptied -->
+<SPAN class="Apple-string-attachment"><OBJECT ... data="cid:..."></OBJECT></SPAN>
+<head><meta charset="UTF-8"></head>                        <!-- the seam -->
+<table width="378"><tbody><tr><td width="264">…text…</td></tr></tbody></table>
+```
+
+The seam is a stray `<head>`. `document.execCommand('copy')` serialises the
+*selection*, and Safari prefixes that fragment with `<head><meta charset>` — a
+`<head>` is invalid outside a document, and it is exactly where Mail re-opened.
+The same signature pasted correctly earlier the same day, as a single-part
+`text/html` with a proper `<head></head><body dir="auto">` and the `<img>` still
+in its cell.
+
+So `copyNode` in `src/theme.py` writes a complete document through
+`ClipboardItem` and keeps `execCommand` only as a fallback. That also stops the
+page's own computed styles — `IBM Plex Sans`, `caret-color`, `box-sizing` on
+every node — from being baked into the signature, which is what selection
+copying did. Browsers sanitise clipboard HTML on the way through, so the test
+asserts the invariant that matters (no `<head>` outside a document, the `<img>`
+still inside a `<td>`, no page chrome) rather than the exact wrapper.
 
 There is a `layout: 'stacked'` branch in `template.js` — single column, immune
 to reflow. It was built, shipped, and rejected: the user wants the logo on the
@@ -148,7 +183,7 @@ edge is the only cue that it does. It is painted with
 ## Shipping a change
 
 1. Edit, then `python3 build.py`.
-2. `node test/verify.mjs` — all 44 must pass.
+2. `node test/verify.mjs` — all 50 must pass.
 3. **Bump `VERSION` in `build.py`.** It shows in the page footer and the zip
    filename.
 4. Commit `docs/` along with the source. Pages serves that folder.
