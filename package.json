@@ -1,0 +1,14 @@
+{
+  "name": "dialogue-society-signatures",
+  "version": "6.0.0",
+  "private": true,
+  "description": "Email signature app for the Dialogue Society",
+  "scripts": {
+    "build": "python3 build.py",
+    "test": "node test/verify.mjs",
+    "check": "python3 build.py && node test/verify.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.40.0"
+  }
+}
