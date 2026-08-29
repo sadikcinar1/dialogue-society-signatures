@@ -46,7 +46,7 @@ def build(VERSION, VLABEL, MARK, LOCKUP, LOCKUP_DARK, render, theme):
         '<code>www.dialoguesociety.org</code>.',
     ]
 
-    def page(title, lede, sig, here, desc, extra=''):
+    def page(title, lede, sig, desc, extra=''):
         src_hosted = sig.replace(MARK, HOSTED)
         return f'''<!doctype html>
 <html lang="en-GB">
@@ -62,7 +62,7 @@ def build(VERSION, VLABEL, MARK, LOCKUP, LOCKUP_DARK, render, theme):
       <p>{lede}</p>
     </div>
   </header>
-{K.nav(here)}
+
   <section>
     <p class="eyebrow">Ready to copy</p>
     <div class="stage">
@@ -158,14 +158,14 @@ def build(VERSION, VLABEL, MARK, LOCKUP, LOCKUP_DARK, render, theme):
         'personal.html': page(
             'Sadik Cinar &mdash; email signature',
             'Your personal signature. Copy it and paste it into your mail client.',
-            SIG_PERSONAL, 'personal.html',
+            SIG_PERSONAL,
             'A finished Dialogue Society personal email signature, ready to copy into '
             'Gmail, Apple Mail or Outlook.'),
         'branch.html': page(
             'The branch signature',
             'For mail sent as the organisation rather than as a person. No one is '
             'named, so the organisation leads.',
-            SIG_BRANCH, 'branch.html',
+            SIG_BRANCH,
             'The Dialogue Society branch email signature, for shared inboxes, '
             'newsletters and regional branches.',
             region_extra),

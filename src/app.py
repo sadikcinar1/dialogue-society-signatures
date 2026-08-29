@@ -137,7 +137,6 @@ def build(VERSION, VLABEL, MARK, LOCKUP, LOCKUP_DARK, render, theme):
                 <li>Set it as the default for <em>New messages</em> and
                 <em>Replies/forwards</em>.</li>
           </ol></div>''')
-      NAV = K.nav('index.html') if with_download else ''
       NOSCRIPT = ('''<noscript><div class="note"><strong>JavaScript is switched off.</strong>
             This page builds your signature in your own browser, so it needs it. The
             two ready-made signatures &mdash;
@@ -154,7 +153,7 @@ def build(VERSION, VLABEL, MARK, LOCKUP, LOCKUP_DARK, render, theme):
           the same colours, the same spacing and the correct logo.</p>
         </div>
       </header>
-{NAV}
+
       <section>
         <div class="build">
           <form class="form" id="f" autocomplete="off">

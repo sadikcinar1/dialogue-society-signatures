@@ -53,13 +53,6 @@ h1{font-family:Newsreader,Georgia,'Times New Roman',serif; font-weight:500;
 @media(max-width:640px){h1{font-size:28px} .mast{gap:16px} .mast .logo{width:92px}}
 .mast p{margin:0; color:var(--soft); max-width:56ch}
 
-.nav{display:flex; flex-wrap:wrap; gap:5px; margin:-26px 0 -14px}
-.nav a{font-size:13.5px; font-weight:600; color:var(--soft); text-decoration:none;
-  padding:7px 13px; border-radius:2px; border:1px solid transparent}
-.nav a:hover{color:var(--blue); border-color:var(--line)}
-.nav a[aria-current=page]{color:var(--blue); background:var(--surface);
-  border-color:var(--line)}
-.nav a:focus-visible{outline:2px solid var(--blue); outline-offset:1px}
 
 section{display:flex; flex-direction:column; gap:17px}
 h2{font-family:Newsreader,Georgia,'Times New Roman',serif; font-weight:500;
@@ -242,24 +235,6 @@ APPLE = [
     'Click into the right-hand pane and paste with <strong>&#8984;V</strong>.',
     'Set <strong>Choose Signature</strong> to it so it is added automatically.',
 ]
-# The three pages of the site. Relative hrefs, because the site is served from
-# the root on GitHub Pages and from the archive root on Cloudflare -- an
-# absolute path would break under either a project page or a subfolder.
-NAV = [
-    ('index.html',    'Signature maker'),
-    ('personal.html', 'Personal signature'),
-    ('branch.html',   'Branch signature'),
-]
-
-
-def nav(current):
-    """The site navigation, with the page you are on marked."""
-    links = ''.join(
-        '<a href="%s"%s>%s</a>' % (href, ' aria-current="page"' if href == current else '', label)
-        for href, label in NAV)
-    return '  <nav class="nav" aria-label="Pages">%s</nav>\n' % links
-
-
 def lockup(light, dark):
     """The masthead lockup, swapping to a light wordmark on a dark page.
 

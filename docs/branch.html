@@ -60,13 +60,6 @@ h1{font-family:Newsreader,Georgia,'Times New Roman',serif; font-weight:500;
 @media(max-width:640px){h1{font-size:28px} .mast{gap:16px} .mast .logo{width:92px}}
 .mast p{margin:0; color:var(--soft); max-width:56ch}
 
-.nav{display:flex; flex-wrap:wrap; gap:5px; margin:-26px 0 -14px}
-.nav a{font-size:13.5px; font-weight:600; color:var(--soft); text-decoration:none;
-  padding:7px 13px; border-radius:2px; border:1px solid transparent}
-.nav a:hover{color:var(--blue); border-color:var(--line)}
-.nav a[aria-current=page]{color:var(--blue); background:var(--surface);
-  border-color:var(--line)}
-.nav a:focus-visible{outline:2px solid var(--blue); outline-offset:1px}
 
 section{display:flex; flex-direction:column; gap:17px}
 h2{font-family:Newsreader,Georgia,'Times New Roman',serif; font-weight:500;
@@ -189,12 +182,11 @@ footer{border-top:1px solid var(--line); padding-top:21px; font-size:13px;
       <p>For mail sent as the organisation rather than as a person. No one is named, so the organisation leads.</p>
     </div>
   </header>
-  <nav class="nav" aria-label="Pages"><a href="index.html">Signature maker</a><a href="personal.html">Personal signature</a><a href="branch.html" aria-current="page">Branch signature</a></nav>
 
   <section>
     <p class="eyebrow">Ready to copy</p>
     <div class="stage">
-      <div class="stage-cap"><span>Preview at actual size</span><b>v7 · logo left</b></div>
+      <div class="stage-cap"><span>Preview at actual size</span><b>v8 · logo left</b></div>
       <div id="sig"><table cellpadding="0" cellspacing="0" border="0" role="presentation" width="378" style="border-collapse:collapse;border-spacing:0;width:378px;min-width:378px;">
   <tr>
     <td width="70" valign="middle" style="width:70px;min-width:70px;padding:0 22px 0 0;vertical-align:middle;"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABLCAMAAAD6bgFoAAAAkFBMVEUAAAAAisQAktAAfr0AisUAisQAi8UAi8UA//8AisQAqqoAisUAf/8Aqv8Af38AVaoAAP8Ai8YAl80AhrkAZswAkbcAkM0AkMwAkMwAf9EAhbwAhb4AkM0AnuEAAH8AVVUAZpkAhbwAiL8AjeIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/SUUAAAAMHRSTlMA/f4FsDDQjQFPA24CAwIDARYJFQUIsJDUByhxLP8CAwpQhQkAAAAAAAAAAAAAAACZx7PTAAAER0lEQVR42qVY17KjOhAc5QQi+NgnbLrh//9xZwTYBFkWu3owVRhaPbkFQH5ZQb8qGCnlzUG6mqDoprBQuWwLEB2+apwam+neoKYbEaCtA0KQIdxu0+YIGKGZsVSQ+v2CjF6DRAsX82FUMs3Hfr7dR5/M+f7+YRCoe4GCGwVt8LfLcLct0hreufn1gpAApeVQcGTE99XtQ0FjSyiOBbz0pQAQYW4AmucoganXIY0tKC4F+Gcohl1grAimgH/0xyWPg1y4qgkmLgSQXOQC5uFf7uCtMkXRw5pfjv5p7MBlJZfpecG0OMSrQ5bK+moYZP913LcFxzVEOLEEfPvxjUpnnQ2jxlwQZ2B6LzTGpNnmHefhHEx6SW6i1aBnTsOA/dQY3IdZEQbGzhqV8pXrT7uhx5ju7DkYD4ohHbGGZZs7dU5GI9bx9egahNFt25/CifSeWsFqhCHvjCedg5Exqxua0UKzxrM+ZjruYRhzJybI4tO7VXYyilYA8KeMYphvGxdPdmE/b2trK23/cM5EbsbRDiu1qUMZ6QW5rm/2WFLRCLBV6YdLP2CHFQrjLI27uBp3BQ8zBhnnzEAyDFOGeZFWxszefk5Pr2A2VhEQIblhLJIJfAuDnULvcAgJc0tLgysEFBd7Mp3QOzaLt46LL4up3Ry4k2EbrxvOCmvX59Yb63UOdFddxFFbmNiI+XncIK69o06QQUW2xHZT4ila1WRit/KBAwV2K0vqyGDxrjw5QNiUs6DeWkFGgHhkK5VU2FpMYou/IuPt5inqEwbszj8x5Ag9yHQd/Nw+gkVj9qmJtajkHuhOxlLZuw1h/K8FM4A9ymK3ByIyfSMoi7P/GXdUTCSmldGU/8uG9ipSho1B70CQDAYpZAduR/LXGT1XFEst44IanfGD35SlXWVe0zRiPijgqeOmXcALy2BQmEgJDFo90Ua9X7qomjnlEkG3PvVHWZIRthPiaiUvlcjUPALztqJrPykRtxTBwMoyooPnZB66Clu5hubPyKxkFemjEp0CmY04s9iWx6eHmgKZOdSPvvzjv6d0npLhO5f2dmQobv05Mlx+7bamMaHHvHhs8mQ4qZf2kPekz9+qyXBSCjZmVWnIibUcmQSS9WVL7TlzkjqS4VyT1PDZKrQejx1YHW8Za5eKTLWpjbvA/WyfIa9Sle3tEtgedJr2JAjcdwqDaEqfE1yaWlk//z8M95z3/QtFSeLA7b9iiPt7sRU1cjDJL54Vs7219SeACUdeTqnrZ3ZNYvYvcZIQQHVdc/7ti19LZkL2xYGoGDEUCmaR6YUEScNnKHReGlw6nc8cPSUOZwccwPTH1QVVCkXfoqKYgIxKdEhce1wtSewJVb0v0rs0CbAGsJZYKqH901flsDxQP7z+foDxHkk2TNUoTXBOKeVoDJMO0EHU5USfpjJue9fW96sMVL6VH/4QyCchkAjMEjp9S0xxOgb7N2zPJV3pc7KHAAAAAElFTkSuQmCC" width="70" height="75" alt="Dialogue Society" style="display:block;width:70px;height:75px;max-width:70px;border:0;outline:none;text-decoration:none;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:700;color:#424242;"></td>
@@ -301,7 +293,7 @@ footer{border-top:1px solid var(--line); padding-top:21px; font-size:13px;
   <footer>Dialogue Society &middot; 29 High Holborn, London WC1V 6AZ &middot;
   Registered Charity No. 1117039<br>
   <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;">
-  Signature v7 · logo left</span></footer>
+  Signature v8 · logo left</span></footer>
 </div>
 <script>
 function mkFlash(el){
